@@ -22,10 +22,11 @@ def task_1_add_new_record_to_db(con) -> None:
     """
     with con.cursor() as cur:
         cur.execute("""
-        INSERT INTO Customers(customer_name, contactname, address, city, postalcode, country) 
+        INSERT INTO Customers(CustomerName, ContactName, Address, City, PostalCode, Country) 
         VALUES('Thomas', 'David', 'Some Address', 'London', '774', 'Singapore');
+        SELECT * FROM Customers;
         """)
-    #con.commit()
+        con.commit()
         return cur.fetchall()
 
 
@@ -74,9 +75,11 @@ def task_4_update_customer(con):
         cur.execute("""
         UPDATE Customers
         SET CustomerName = 'Johnny Depp' WHERE CustomerID = 1;
+        SELECT * 
+        FROM Customers;
         """)
         #cur.commit()
-    return cur.fetchall()
+        return cur.fetchall()
 
 
 def task_5_delete_the_last_customer(con) -> None:
@@ -90,9 +93,11 @@ def task_5_delete_the_last_customer(con) -> None:
         cur.execute("""
         DELETE FROM Customers
         WHERE CustomerID=(SELECT COUNT(*) FROM Customers);
+        SELECT * 
+        FROM Customers;
         """)
         #cur.commit()
-    return cur.fetchall()
+        return cur.fetchall()
 
 def task_6_list_all_supplier_countries(cur) -> list:
     """
@@ -107,7 +112,6 @@ def task_6_list_all_supplier_countries(cur) -> list:
     cur.execute("""
     SELECT Country
     FROM Suppliers
-    GROUP BY Country
     """)
     return cur.fetchall()
 
@@ -125,7 +129,6 @@ def task_7_list_supplier_countries_in_desc_order(cur) -> list:
     cur.execute("""
     SELECT Country
     FROM Suppliers
-    GROUP BY Country
     ORDER BY Country DESC
     """)
     return cur.fetchall()
@@ -145,6 +148,7 @@ def task_8_count_customers_by_city(cur):
     SELECT City, COUNT(CustomerID)
     FROM Customers
     GROUP BY City
+    ORDER BY COUNT(City) DESC;
     """)
     return cur.fetchall()
 
@@ -208,7 +212,7 @@ def task_12_list_suppliers_from_specified_countries(cur):
     Returns: 8 records
     """
     cur.execute("""
-    SELECT *
+    SELECT supplierid, suppliername, contactname, city, country
     FROM Suppliers
     WHERE Country ='USA' OR Country='UK' OR Country='Japan'
     """)
@@ -225,7 +229,7 @@ def task_13_list_products_from_sweden_suppliers(cur):
     Returns: 3 records
     """
     cur.execute("""
-    SELECT ProductName, SupplierName
+    SELECT ProductName
     FROM Products
     INNER JOIN Suppliers
     ON Products.SupplierID = Suppliers.SupplierID
@@ -244,7 +248,7 @@ def task_14_list_products_with_supplier_information(cur):
     Returns: 77 records
     """
     cur.execute("""
-    SELECT Suppliers.*, Products.ProductName
+    SELECT Products.Productid, Products.Productname, Products.unit, Products.Price, Suppliers.Country, Suppliers.City, Suppliers.SupplierName
     FROM Suppliers
     LEFT JOIN Products
     ON Products.SupplierID = Suppliers.SupplierID
@@ -262,7 +266,7 @@ def task_15_list_customers_with_any_order_or_not(cur):
     Returns: 213 records
     """
     cur.execute("""
-    SELECT Customers.*
+    SELECT Customers.CustomerName, Customers.Contactname, Customers.Country, Orders.Orderid
     FROM Customers
     LEFT JOIN Orders
     ON Customers.CustomerID = Orders.CustomerID
@@ -280,9 +284,11 @@ def task_16_match_all_customers_and_suppliers_by_country(cur):
     Returns: 194 records
     """
     cur.execute("""
-    SELECT Customers.*, SupplierName
+    SELECT Customers.CustomerName, Customers.Address, Customers.Country, Suppliers.Country, Suppliers.SupplierName
     FROM Customers
     FULL JOIN Suppliers
     ON Customers.Country = Suppliers.Country
+    ORDER BY Customers.Country, Suppliers.Country;
     """)
     return cur.fetchall()
+
