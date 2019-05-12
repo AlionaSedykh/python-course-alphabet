@@ -47,13 +47,13 @@
     Колекціонерів можна порівнювати за ціною всіх їх автомобілів.
 """
 
-
 import uuid
 from objects_and_classes.homework import constants
 import random
 
 
 class Car:
+
     def __init__(self,  price, type, producer, mileage):
         self.price = price
         self.type = type
